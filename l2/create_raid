@@ -1,0 +1,1 @@
+mdadm --create device --level=10 --raid-devices=6 /dev/sd{b..g}
