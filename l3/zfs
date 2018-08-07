@@ -1,0 +1,48 @@
+rpm -ivh http://download.zfsonlinux.org/epel/zfs-release.el7_5.noarch.rpm
+yum install zfs kernel-devel
+parted /dev/sdb mklabel gpt
+parted /dev/sdc mklabel gpt
+parted /dev/sdd mklabel gpt
+parted /dev/sde mklabel gpt
+parted /dev/sdf mklabel gpt
+parted /dev/sdg mklabel gpt
+parted /dev/sdb mkpart disk_2 1 100%
+parted /dev/sdc mkpart disk_3 1 100%
+parted /dev/sdd mkpart disk_4 1 100%
+parted /dev/sde mkpart disk_5 1 100%
+parted /dev/sdf mkpart disk_5 1 100%
+parted /dev/sdg mkpart disk_6 1 100%
+modprobe zfs
+zpool create otus_pool mirror /dev/disk/by-partlabel/disk_1 /dev/disk/by-partlabel/disk_2 mirror /dev/disk/by-partlabel/disk_3 /dev/disk/by-partlabel/disk_4 cache /dev/disk/by-partlabel/disk_5
+zpool add otus_pool spare /dev/disk/by-partlabel/disk_6
+
+zpool status
+  pool: otus_pool
+ state: ONLINE
+  scan: none requested
+config:
+
+        NAME        STATE     READ WRITE CKSUM
+        otus_pool   ONLINE       0     0     0
+          mirror-0  ONLINE       0     0     0
+            disk_1  ONLINE       0     0     0
+            disk_2  ONLINE       0     0     0
+          mirror-1  ONLINE       0     0     0
+            disk_3  ONLINE       0     0     0
+            disk_4  ONLINE       0     0     0
+        cache
+          disk_5    ONLINE       0     0     0
+        spares
+          disk_6    AVAIL
+
+errors: No known data errors
+zfs create otus_pool/opt_vol
+zfs set mountpoint=/opt otus_pool/opt_vol
+
+Проверяем монтирование
+ls /opt
+
+zfs mount -a
+ls /opt
+debug
+kernels
