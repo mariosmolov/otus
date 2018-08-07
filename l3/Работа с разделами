@@ -1,0 +1,49 @@
+Система ставилась на ext4.
+Уменьшаем корневой раздел создаем дополнительные разделы.
+В rescue mode:
+vgscan
+vgchange -ay
+e2fsck /dev/centos/root
+resize2fs /dev/centos/root 8G
+lvreduce -r -L 8G /dev/centos/root
+Перезагрузка
+lvcreate -L 1G -n lvm_home centos
+mkfs.ext4 /dev/mapper/centos-lvm_home 
+lvcreate -L 8G -n var_disk1 centos
+lvcreate -L 8G -n var_disk2 centos
+yum install mdadm
+mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/centos/var_disk1 /dev/centos/var_disk2
+mkfs.ext4 /dev/md0
+echo "/dev/mapper/centos-lvm_home /home ext4 defaults    1 1" >> /etc/fstab
+echo "/dev/md0	/var	ext4	defaults	1 1" >> /etc/fstab
+Перезагрузка в rescue mode:
+vgscan
+vgchange -ay
+mkdir /mnt/{1..2}
+mount /dev/centos/root /mnt/1
+mount /dev/md127 /mnt/2
+cp -R /mnt/1/* /mnt/2/
+Перезагрузка
+
+Работа со снимками
+cp /usr/src/ /home
+lvcreate -L 1G -s -n lvm_home-snap centos/lvm_home
+rm -R ./*
+lvconvert --merge centos/lvm_home-snap
+Выдало сообщение, что нужно переактивировать том.  
+Перезагрузка
+После перезагрузки удаленные файлы были восстановлены.
+
+Изменение опци монтирования
+Дабил опции: noatime,data=journal для раздела /home 
+# cat /etc/fstab 
+/dev/mapper/centos-root	/	ext4	defaults	1 1
+UUID=bc1b7c63-d848-4482-a663-7aec60453e5f	/boot	ext4	defaults	1 2
+/dev/mapper/centos-swap	swap	swap	defaults	0 0
+/dev/mapper/centos-lvm_home	/home	ext4	defaults,noatime,data=journal	1 1
+/dev/md0	/var	ext4	defaults	1 1
+
+После перезагрзуки
+# mount | grep -i home
+/dev/mapper/centos-lvm_home on /home type ext4 (rw,noatime,seclabel,nodelalloc,data=journal)
+
