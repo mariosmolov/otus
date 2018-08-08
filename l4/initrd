@@ -1680,3 +1680,23 @@ drwxr-xr-x   2 root     root            0 Aug  8 14:17 var
 lrwxrwxrwx   1 root     root           11 Aug  8 14:17 var/lock -> ../run/lock
 lrwxrwxrwx   1 root     root            6 Aug  8 14:17 var/run -> ../run
 ========================================================================
+
+# lsinitrd /boot/initramfs-3.10.0-862.9.1.test-modele.img  -f usr/lib/dracut/hooks/cleanup/00-my_test.sh
+0<>/dev/console 1<>/dev/console 2<>/dev/console
+cat <<'msgend'
+ ___________________
+< I'm dracut module >
+ -------------------
+ \
+ \
+ .--.
+ |o_o |
+ |:_/ |
+ // \ \
+ (| | )
+ /'\_ _/`\
+ \___)=(___/
+msgend
+sleep 10
+echo " continuing...."
+
