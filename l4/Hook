@@ -1,0 +1,76 @@
+Созал директорию /usr/lib/dracut/modules.d/01test-module
+В ней два файла:
+-rwxr-xr-x. 1 root root 116 авг  8 14:22 module-setup.sh
+-rwxr-xr-x. 1 root root 234 авг  8 12:59 my_test.sh
+
+# cat ./module-setup.sh 
+#!/bin/bash
+check() {
+ return 0
+}
+depends() {
+ return 0
+}
+install() {
+ inst_hook cleanup 00 "$moddir/my_test.sh"
+} 
+
+# cat ./my_test.sh 
+0<>/dev/console 1<>/dev/console 2<>/dev/console
+cat <<'msgend'
+ ___________________
+< I'm dracut module >
+ -------------------
+ \
+ \
+ .--.
+ |o_o |
+ |:_/ |
+ // \ \
+ (| | )
+ /'\_ _/`\
+ \___)=(___/
+msgend
+sleep 10
+echo " continuing...."
+
+Собрал образ, положил его в /boot
+dracut initramfs-3.10.0-862.9.1.test-modele.img  -f
+
+Подправил конфиг груба /etc/grub.d/40_custom
+Данный кусок кода скопирован из рабочего конфига. Изменена только строка initrd16.
+
+# cat ./40_custom 
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+
+menuentry 'CentOS Linux (3.10.0-862.9.1.el7.x86_64) 7 (Core) otus_test' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-862.el7.x86_64-advanced-aa139159-2b68-4f20-b772-2b2cd04d394c' {
+	load_video
+	set gfxpayload=keep
+	insmod gzio
+	insmod part_msdos
+	insmod ext2
+	set root='hd0,msdos1'
+	if [ x$feature_platform_search_hint = xy ]; then
+	  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,msdos1 --hint-efi=hd0,msdos1 --hint-baremetal=ahci0,msdos1 --hint='hd0,msdos1'  bc1b7c63-d848-4482-a663-7aec60453e5f
+	else
+	  search --no-floppy --fs-uuid --set=root bc1b7c63-d848-4482-a663-7aec60453e5f
+	fi
+	linux16 /vmlinuz-3.10.0-862.9.1.el7.x86_64 root=/dev/mapper/centos-root ro crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet LANG=en_US.UTF-8
+	initrd16 /initramfs-3.10.0-862.9.1.test-modele.img
+}
+
+Обновил груб 
+grub2-mkconfig -o /etc/grub2.cfg
+
+В итоге....
+При загрузке есть пауза (как раз, примерно 10 сек) после "Starting dracut pre-pivot and cleanup hook...". 
+Если грузить систему с неизмененным образом, то никаких пауз нет.
+При этом никакого вывода сообщений не происходит. 
+
+
+
+
