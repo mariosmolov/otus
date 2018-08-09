@@ -1,0 +1,16 @@
+# vgs
+  VG     #PV #LV #SN Attr   VSize   VFree  
+  centos   1   5   0 wz--n- <39,00g <12,00g
+
+# vgrename centos otus_vg
+Меняем старое название VG на новое fstab и grub.cfg
+# vim /etc/fstab
+# vim /boot/grub2/grub.cfg
+Пересобираем образ inird
+# cp /boot/initramfs-3.10.0-862.9.1.test-modele.img /boot/initramfs-3.10.0-862.9.1.test-modele.img.bak
+# dracut -f /boot/initramfs-3.10.0-862.9.1.test-modele.img
+# systemctl reboot -f
+
+# vgs
+  VG      #PV #LV #SN Attr   VSize   VFree  
+  otus_vg   1   5   0 wz--n- <39,00g <12,00g
