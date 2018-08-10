@@ -23,3 +23,8 @@ cat /etc/fstab
 
 mount /dev/mapper/test_vg-boot  /mnt/
 cp -rp /boot/* /mnt/
+
+reboot
+
+mount | grep boot
+/dev/mapper/test_vg-boot on /boot type ext4 (rw,relatime,seclabel)
