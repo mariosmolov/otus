@@ -1,0 +1,25 @@
+cd /etc/yum.repos.d/
+vim ./otus-repo.repo
+yum update
+
+pvcreate --bootloaderareasize 1m /dev/sdg
+vgcreate test_vg /dev/sdg
+lvcreate -L 248m -n boot test_vg
+mkfs.ext2 /dev/mapper/test_vg-boot
+
+grub2-install /dev/sdg
+
+cat /etc/fstab 
+...
+UUID=bc1b7c63-d848-4482-a663-7aec60453e5f	/boot	ext4	defaults	1 2
+...
+
+vim /etc/fstab 
+
+cat /etc/fstab 
+...
+/dev/mapper/test_vg-boot	/boot	ext4	defaults	1 2
+...
+
+mount /dev/mapper/test_vg-boot  /mnt/
+cp -rp /boot/* /mnt/
