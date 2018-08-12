@@ -1,0 +1,7 @@
+#!/bin/bash
+okvar=0
+pgrep -f my_script.sh > /dev/null || okvar=1
+
+if [ $okvar -eq 1 ] ; then
+sh /home/user/my_script.sh
+fi
