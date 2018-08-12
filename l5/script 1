@@ -1,0 +1,25 @@
+Мониторинг сервиса
+
+В крон
+*/5 * * * * sh /home/user/watchdog.sh sshd > /dev/null
+
+Скрипт watchdog.sh:
+
+#!/bin/bash
+
+DATE=`date +%Y-%m-%d--%H-%M-%S`
+SERVICE_NAME="$1"
+PGREP="pgrep -x"
+
+if [ -n $SERVICE_NAME ]
+then
+   RESTART="/usr/bin/systemctl restart ${SERVICE_NAME}"
+fi
+
+pids=`$PGREP ${SERVICE_NAME}`
+echo $pids
+if [ -z $pids ]
+then
+   $RESTART
+   echo "$DATE : ${SERVICE_NAME} restarted."
+fi
