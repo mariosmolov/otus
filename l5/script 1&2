@@ -22,4 +22,5 @@ if [ -z $pids ]
 then
    $RESTART
    echo "$DATE : ${SERVICE_NAME} restarted."
+   echo "$DATE : ${SERVICE_NAME} restarted" | mail -s "Restart: ${SERVICE_NAME}" ${MAIL_TO}
 fi
