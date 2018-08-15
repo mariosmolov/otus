@@ -1,0 +1,40 @@
+# cat /etc/systemd/system/myservice.service 
+[Unit]
+Description=MyOtus Monitoring Service
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/sysconfig/myservice
+ExecStart=/root/myservice.sh $VARFILE $VARSTRING
+
+[Install]
+WantedBy=multi-user.target
+
+# cat /etc/systemd/system/myservice.timer   
+[Unit]
+Description=Execute MyService every 30 seconds
+[Timer]
+OnCalendar=*-*-* *:*:00/30
+Unit=myservice.service
+[Install]
+WantedBy=multi-user.target
+
+# cat /etc/sysconfig/myservice 
+VARFILE="/var/log/secure"
+VARSTRING="vagrant"
+
+# cat /root/myservice.sh 
+#!/bin/sh
+monfile=$1
+monstring=$2
+count=`grep -c $monfile -e $monstring`
+
+if [ $count -gt 0 ]; then
+echo "String found out!" >> /root/myscript.log
+fi
+
+# cat /root/myscript.log 
+String found out!
+String found out!
+String found out!
+
