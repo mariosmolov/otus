@@ -38,3 +38,10 @@ String found out!
 String found out!
 String found out!
 
+# systemctl status myservice.timer
+● myservice.timer - Execute MyService every 30 seconds
+   Loaded: loaded (/etc/systemd/system/myservice.timer; enabled; vendor preset: disabled)
+   Active: active (running) since Wed 2018-08-15 11:49:19 UTC; 55s ago
+
+Aug 15 11:49:19 otuslinux systemd[1]: Started Execute MyService every 30 seconds.
+Aug 15 11:49:19 otuslinux systemd[1]: Starting Execute MyService every 30 seconds.
