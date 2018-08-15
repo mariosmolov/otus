@@ -7,9 +7,6 @@ Type=simple
 EnvironmentFile=/etc/sysconfig/myservice
 ExecStart=/root/myservice.sh $VARFILE $VARSTRING
 
-[Install]
-WantedBy=multi-user.target
-
 # cat /etc/systemd/system/myservice.timer   
 [Unit]
 Description=Execute MyService every 30 seconds
