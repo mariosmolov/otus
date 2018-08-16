@@ -12,6 +12,7 @@ After=network.target rsyslog.service local-fs.target remote-fs.target
 [Service]
 Type=forking
 EnvironmentFile=/etc/sysconfig/spawn-fcgi
+ExecStartPre=[ -n "${SOCKET}" -a -S "${SOCKET}" ] && rm -f ${SOCKET}
 ExecStart=/usr/bin/spawn-fcgi $OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
 StandardOutput=null
