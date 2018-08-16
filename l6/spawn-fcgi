@@ -1,0 +1,65 @@
+Удаляем (перемещаем файл скрипта init из init.d).
+
+Раскомментируем стандартные настройки в /etc/sysconfig/spawn-fcgi
+
+Создаем:
+$cat /etc/systemd/system/spawn-fcgi.service 
+[Unit]
+Description=Spawn FastCGI scripts to be used by web servers
+Documentation=man:spawn-fcgi
+After=network.target rsyslog.service local-fs.target remote-fs.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/sysconfig/spawn-fcgi
+ExecStart=/usr/bin/spawn-fcgi $OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+
+#systemctl start spawn-fcgi
+
+# systemctl status spawn-fcgi
+● spawn-fcgi.service - Spawn FastCGI scripts to be used by web servers
+   Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; enabled; vendor preset: disabled)
+   Active: active (running) since Thu 2018-08-16 12:19:32 UTC; 4min 13s ago
+     Docs: man:spawn-fcgi
+  Process: 2151 ExecStart=/usr/bin/spawn-fcgi $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 2152 (php-cgi)
+   CGroup: /system.slice/spawn-fcgi.service
+           ├─2152 /usr/bin/php-cgi
+           ├─2153 /usr/bin/php-cgi
+           ├─2154 /usr/bin/php-cgi
+           ├─2155 /usr/bin/php-cgi
+           ├─2156 /usr/bin/php-cgi
+           ├─2157 /usr/bin/php-cgi
+           ├─2158 /usr/bin/php-cgi
+           ├─2159 /usr/bin/php-cgi
+           ├─2160 /usr/bin/php-cgi
+           ├─2161 /usr/bin/php-cgi
+           ├─2162 /usr/bin/php-cgi
+           ├─2163 /usr/bin/php-cgi
+           ├─2164 /usr/bin/php-cgi
+           ├─2165 /usr/bin/php-cgi
+           ├─2166 /usr/bin/php-cgi
+           ├─2167 /usr/bin/php-cgi
+           ├─2168 /usr/bin/php-cgi
+           ├─2169 /usr/bin/php-cgi
+           ├─2170 /usr/bin/php-cgi
+           ├─2171 /usr/bin/php-cgi
+           ├─2172 /usr/bin/php-cgi
+           ├─2173 /usr/bin/php-cgi
+           ├─2174 /usr/bin/php-cgi
+           ├─2175 /usr/bin/php-cgi
+           ├─2176 /usr/bin/php-cgi
+           ├─2177 /usr/bin/php-cgi
+           ├─2178 /usr/bin/php-cgi
+           ├─2179 /usr/bin/php-cgi
+           ├─2180 /usr/bin/php-cgi
+           ├─2181 /usr/bin/php-cgi
+           ├─2182 /usr/bin/php-cgi
+           ├─2183 /usr/bin/php-cgi
+           └─2184 /usr/bin/php-cgi
