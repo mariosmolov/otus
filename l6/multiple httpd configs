@@ -1,0 +1,79 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!! Для простоты я сразу отключил firewalld и selinux. !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Переименовываем файл юнита httpd:
+#mv /usr/lib/systemd/system/httpd.service /usr/lib/systemd/system/httpd@.service 
+
+Копируем его в /etc/systemd/system
+#cp /usr/lib/systemd/system/httpd@.service /etc/systemd/system/
+
+Готовим файлы конфига для двух сервисов, в каждом просисываем PID файл:
+#cp /etc/sysconfig/httpd /etc/sysconfig/httpd.conf1
+#mv /etc/sysconfig/httpd /etc/sysconfig/httpd.conf2 - В файле конфига меняем порт на другой (я ставил 82).
+
+Приводим файл юнита в /etc/systemd/system к следующему виду:
+# cat /etc/systemd/system/httpd@.service 
+[Unit]
+Description=The Apache HTTP Server %i
+After=network.target remote-fs.target nss-lookup.target
+Documentation=man:httpd(8)
+Documentation=man:apachectl(8)
+
+[Service]
+Type=notify
+EnvironmentFile=/etc/sysconfig/httpd.%i
+ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH ${MAINPID}
+# We want systemd to give httpd some time to finish gracefully, but still want
+# it to kill httpd after TimeoutStopSec if something went wrong during the
+# graceful stop. Normally, Systemd sends SIGTERM signal right after the
+# ExecStop, which would kill httpd. We are sending useless SIGCONT here to give
+# httpd time to finish.
+KillSignal=SIGCONT
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+Перегружаем systemd
+#systemctl daemon-reload
+Запускаем сервисы
+#systemctl start httpd@conf1
+#systemctl start httpd@conf2
+
+
+● httpd@conf1.service - The Apache HTTP Server conf1
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Fri 2018-08-17 11:40:06 UTC; 11s ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 1198 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/system-httpd.slice/httpd@conf1.service
+           ├─1198 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+           ├─1199 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+           ├─1200 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+           ├─1201 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+           ├─1202 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+           └─1203 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf1 -DFOREGROUND
+
+Aug 17 11:40:05 otuslinux systemd[1]: Starting The Apache HTTP Server conf1...
+Aug 17 11:40:06 otuslinux httpd[1198]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1. Set the 'ServerName' directive globally to suppress this message
+Aug 17 11:40:06 otuslinux systemd[1]: Started The Apache HTTP Server conf1.
+[root@otuslinux vagrant]# systemctl status httpd@conf2
+● httpd@conf2.service - The Apache HTTP Server conf2
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Fri 2018-08-17 11:40:07 UTC; 10s ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 1210 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/system-httpd.slice/httpd@conf2.service
+           ├─1210 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
+           ├─1211 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
+           ├─1212 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
+           ├─1213 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
+           ├─1214 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
+           └─1215 /usr/sbin/httpd -f /etc/httpd/conf/httpd.conf2 -DFOREGROUND
