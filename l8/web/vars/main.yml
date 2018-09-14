@@ -1,0 +1,3 @@
+---
+nginx_vars:
+  default_port: 8080
