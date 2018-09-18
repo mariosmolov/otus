@@ -1,0 +1,12 @@
+---
+ - name: Common config
+   hosts: common
+   become: true
+   roles:
+      - common
+       
+ - name: IPA clients config
+   hosts: clients
+   become: true
+   roles:
+      - clients
