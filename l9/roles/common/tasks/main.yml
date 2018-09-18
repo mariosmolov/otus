@@ -1,0 +1,21 @@
+---
+
+ - name: Install Epel
+   yum:
+      name: epel-release
+      state: latest
+
+ - name: Install VIM soft
+   yum:
+      name: vim
+      state: latest
+
+ - name: Install MC soft
+   yum:
+      name: mc
+      state: latest
+ 
+ - name: Install BindUtils soft
+   yum:
+      name: bind-utils
+      state: latest
