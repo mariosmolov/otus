@@ -1,0 +1,24 @@
+---
+
+ - name: Install IPA client
+   yum:
+      name: freeipa-client
+      state: latest
+
+ - name: Enable ntp
+   systemd:
+      name: ntpd
+      enabled: yes
+
+ - name: Starting ntp
+   systemd:
+      name: ntpd
+      state: started
+   
+ - name: update dns config
+   template:
+      src: etc/resolv.conf.j2
+      dest: /etc/resolv.conf
+
+ - name: Add client 
+   command: ipa-client-install --domain=otustest.com --realm=OTUSTEST.COM --server=dc.otustest.com --principal=admin@OTUSTEST.COM --password=12345678 --mkhomedir --unattended --force-join
