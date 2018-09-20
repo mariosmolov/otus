@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# # vim: set ft=ruby :
+#
+MACHINES = {
+  :repootus => {
+
+        :box_name => "centos/7",
+        :ip_addr => '192.168.11.101'
+  },
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+      config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+          box.vm.host_name = boxname.to_s
+
+          box.vm.network "private_network", ip: boxconfig[:ip_addr]
+
+          box.vm.provider :virtualbox do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "1024"]
+          end
+
+          box.vm.provision :shell do |s|
+             s.inline = 'mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh'
+          end
+	  box.vm.provision "shell", inline: <<-SHELL
+yum install -y epel-release 
+yum install -y vim mc gcc db4-devel yum-utils xmlto lua-devel apr-devel apt-utils-devel systemd-devel autoconf mailcap zlib-devel libselinux-devel apr-util-devel pcre-devel openssl-devel libxml2-devel createrepo rpmdevtools rpm-build
+yumdownloader --source httpd --destdir=/root
+rpmdev-setuptree /root
+rpm -ivh /root/httpd*.src.rpm 
+sed -i '18s/Release: 80%{?dist}.1/Release: 80%{?dist}.2/g' /root/rpmbuild/SPECS/httpd.spec
+sed -i '502s/--enable-proxy \\/--with-port=8888\\/g' /root/rpmbuild/SPECS/httpd.spec
+
+rpmbuild -bb /root/rpmbuild/SPECS/httpd.spec
+
+mkdir -p /repos/CentOS/7/x86_64/Packages
+cp /root/rpmbuild/RPMS/x86_64/* /repos/CentOS/7/x86_64/Packages
+chmod 755 /repos/CentOS/7/x86_64/Packages/*
+createrepo /repos/CentOS/7/x86_64
+echo -e "[test-repo]\nname = My test repo\nbaseurl=file:///repos/CentOS/7/\\$basearch/\ngpgcheck=0\nenabled=1" > /etc/yum.repos.d/local.repo
+          SHELL
+      end
+  end
+end
