@@ -1,0 +1,84 @@
+---
+
+ - name: Common config
+   hosts: host
+   become: yes
+
+   tasks:
+   - name: Install epel
+     yum:
+       name: epel-release
+       state: latest
+   - name: Update packages
+     yum:
+       name: '*'
+       state: latest
+   - name: Install packages
+     yum:
+       name:
+        - vim
+        - mc
+        - iftop
+        - htop
+        - strace
+        - ltrace
+        - gsmartcontrol
+        - iotop
+        - psmisc
+        - lsof
+       state: latest
+
+   - name: Sysctl net.core.somaxconn
+     sysctl:
+       name: net.core.somaxconn
+       sysctl_set: yes
+       value: 1024
+
+   - name: Sysctl vm.swappiness
+     sysctl:
+       name: vm.swappiness
+       sysctl_set: yes
+       value: 1
+
+   - name: Sysctl net.core.rmem_max
+     sysctl:
+       name: net.core.rmem_max
+       sysctl_set: yes
+       value: 8388608
+
+   - name: Sysctl net.core.wmem_max
+     sysctl:
+       name: net.core.wmem_max
+       sysctl_set: yes
+       value: 8388608
+
+   - name: Sysctl net.core.rmem_default
+     sysctl:
+       name: net.core.rmem_default
+       sysctl_set: yes
+       value: 65536
+
+   - name: Sysctl net.core.wmem_default
+     sysctl:
+       name: net.core.wmem_default
+       sysctl_set: yes
+       value: 65536
+       
+   - name: Sysctl net.ipv4.tcp_rmem
+     sysctl:
+       name: net.ipv4.tcp_rmem
+       sysctl_set: yes
+       value: '4096 87380 8388608'
+       
+   - name: Sysctl net.ipv4.tcp_wmem
+     sysctl:
+       name: net.ipv4.tcp_wmem
+       sysctl_set: yes
+       value: '4096 65536 8388608'
+       
+   - name: Sysctl net.ipv4.tcp_mem
+     sysctl:
+       name: net.ipv4.tcp_mem
+       sysctl_set: yes
+       value: '8388608 8388608 8388608'
+                                               
