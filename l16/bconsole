@@ -1,0 +1,105 @@
+*list jobs
+Automatically selected Catalog: MySQL
+Using Catalog "MySQL"
++-------+---------------------+---------------------+------+-------+----------+------------+-----------+
+| JobId | Name                | StartTime           | Type | Level | JobFiles | JobBytes   | JobStatus |
++-------+---------------------+---------------------+------+-------+----------+------------+-----------+
+|    24 | BackupClientEtcInc  | 2018-10-01 13:40:02 | B    | F     |    2,390 | 10,898,150 | T         |
+|    25 | BackupClientEtcInc  | 2018-10-01 13:50:02 | B    | I     |        0 |          0 | T         |
+|    26 | BackupClientEtcDiff | 2018-10-01 14:00:02 | B    | F     |    2,390 | 10,898,150 | T         |
+|    27 | BackupClientEtcInc  | 2018-10-01 14:00:06 | B    | I     |        0 |          0 | T         |
+|    29 | BackupClientEtcDiff | 2018-10-01 14:07:00 | B    | D     |        0 |          0 | T         |
+|    30 | BackupClientEtcInc  | 2018-10-01 14:10:02 | B    | I     |        0 |          0 | T         |
+|    31 | BackupClientEtcInc  | 2018-10-01 14:20:02 | B    | I     |        0 |          0 | T         |
+|    32 | BackupClientEtcDiff | 2018-10-01 14:30:02 | B    | D     |        0 |          0 | T         |
+|    33 | BackupClientEtcInc  | 2018-10-01 14:30:04 | B    | I     |        0 |          0 | T         |
+|    34 | BackupClientEtcInc  | 2018-10-01 14:40:02 | B    | I     |        0 |          0 | T         |
+|    35 | BackupClientEtcInc  | 2018-10-01 14:50:02 | B    | I     |        0 |          0 | T         |
+|    36 | BackupClientEtcDiff | 2018-10-01 15:00:02 | B    | D     |        0 |          0 | T         |
+|    37 | BackupClientEtcInc  | 2018-10-01 15:00:05 | B    | I     |        0 |          0 | T         |
+|    38 | BackupClientEtcInc  | 2018-10-01 15:10:02 | B    | I     |        2 |         16 | T         |
+|    39 | BackupClientEtcInc  | 2018-10-01 15:20:03 | B    | I     |        0 |          0 | T         |
++-------+---------------------+---------------------+------+-------+----------+------------+-----------+
+
+*list files jobid=24
+Automatically selected Catalog: MySQL
+Using Catalog "MySQL"
++----------+
+| Filename |
++----------+
+| /etc/fstab |
+| /etc/crypttab |
+| /etc/mtab |
+| /etc/resolv.conf |
+| /etc/grub.d/00_header |
+| /etc/grub.d/01_users |
+| /etc/grub.d/10_linux |
+| /etc/grub.d/20_linux_xen |
+...
+...
+...
+| /etc/firewalld/zones/public.xml |
+| /etc/firewalld/zones/public.xml.old |
+| /etc/tuned/active_profile |
+| /etc/tuned/bootcmdline |
+| /etc/tuned/profile_mode |
+| /etc/tuned/tuned-main.conf |
+| /etc/nfs.conf |
+| /etc/nfsmount.conf |
+| /etc/audisp/audispd.conf |
+| /etc/audisp/plugins.d/af_unix.conf |
+| /etc/audisp/plugins.d/syslog.conf |
+| /etc/audit/audit-stop.rules |
+| /etc/audit/auditd.conf |
+| /etc/audit/rules.d/audit.rules |
+| /etc/audit/audit.rules |
+| /etc/postfix/access |
+| /etc/postfix/canonical |
+| /etc/postfix/generic |
+| /etc/postfix/header_checks |
+| /etc/postfix/main.cf |
+| /etc/postfix/master.cf |
+| /etc/postfix/relocated |
+| /etc/postfix/transport |
+| /etc/postfix/virtual |
+| /etc/rsyslog.conf |
+| /etc/rsyncd.conf |
+| /etc/qemu-ga/fsfreeze-hook |
+| /etc/chrony.conf |
+| /etc/chrony.keys |
+| /etc/screenrc |
+| /etc/man_db.conf |
+| /etc/e2fsck.conf |
+| /etc/mke2fs.conf |
+| /etc/sudo-ldap.conf |
+| /etc/sudo.conf |
+| /etc/sudoers |
+| /etc/sudoers.d/vagrant |
+| /etc/vconsole.conf |
+| /etc/locale.conf |
+| /etc/hostname |
+| /etc/.updated |
+| /etc/aliases.db |
+| /etc/vimrc |
+| /etc/bacula/bacula-fd.conf |
++----------+
++-------+--------------------+---------------------+------+-------+----------+------------+-----------+
+| JobId | Name               | StartTime           | Type | Level | JobFiles | JobBytes   | JobStatus |
++-------+--------------------+---------------------+------+-------+----------+------------+-----------+
+|    24 | BackupClientEtcInc | 2018-10-01 13:40:02 | B    | F     |    2,390 | 10,898,150 | T         |
++-------+--------------------+---------------------+------+-------+----------+------------+-----------+
+
+*list files jobid=38
+Automatically selected Catalog: MySQL
+Using Catalog "MySQL"
++----------+
+| Filename |
++----------+
+| /etc/    |
+| /etc/test.bkp |
++----------+
++-------+--------------------+---------------------+------+-------+----------+----------+-----------+
+| JobId | Name               | StartTime           | Type | Level | JobFiles | JobBytes | JobStatus |
++-------+--------------------+---------------------+------+-------+----------+----------+-----------+
+|    38 | BackupClientEtcInc | 2018-10-01 15:10:02 | B    | I     |        2 |       16 | T         |
++-------+--------------------+---------------------+------+-------+----------+----------+-----------+
