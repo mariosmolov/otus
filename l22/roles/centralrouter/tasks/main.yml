@@ -1,0 +1,25 @@
+---
+
+ - name: load module
+   modprobe:
+      name: bonding
+
+ - name: config bond
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-bond0
+      dest: /etc/sysconfig/network-scripts/ifcfg-bond0
+
+ - name: config nic 1
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth1
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+
+ - name: config nic 2
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth2
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+
+ - name: Network reload
+   service:
+      name: network
+      state: restarted
