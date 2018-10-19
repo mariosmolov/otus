@@ -1,0 +1,81 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+MACHINES = {
+  :testserver1 => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.2.66', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "o1test-net"},
+                   {ip: '0.0.0.0', adapter: 3, virtualbox__intnet: "o1test-net"},
+                ]
+  },
+  :testserver2 => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.2.67', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "o1test-net"},
+                   {ip: '0.0.0.0', adapter: 3, virtualbox__intnet: "o1test-net"},
+                ]
+  },
+  :testclient1 => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.2.68', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "o1test-net"},
+                   {ip: '0.0.0.0', adapter: 3, virtualbox__intnet: "o1test-net"},
+                ]
+  },
+  :testclient2 => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.2.69', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "o1test-net"},
+                   {ip: '0.0.0.0', adapter: 3, virtualbox__intnet: "o1test-net"},
+                ]
+  },
+  :inetrouter => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, virtualbox__intnet: "router-net"},
+                   {adapter: 3, virtualbox__intnet: "router-net"},
+                   {ip: '192.168.50.10', adapter: 4, netmask: "255.255.255.0", virtualbox__generic: "vboxnet1"},
+                ]
+  },
+
+  :centralrouter => {
+        :box_name => "centos/7",
+        :net => [
+                   { adapter: 2, virtualbox__intnet: "router-net"},
+                   { adapter: 3, virtualbox__intnet: "router-net"},
+                   {ip: '192.168.0.249', adapter: 4, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                ]
+  }
+#  :OfficeRouter => {
+#        :box_name => "centos/7",
+#        :net => [
+#                   {ip: '192.168.0.250', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+#                   {ip: '192.168.2.65', adapter: 3, netmask: "255.255.255.192", virtualbox__intnet: "o1test-net"},
+#                ]
+#  }
+}
+
+Vagrant.configure(2) do |config|
+  MACHINES.each do |boxname, boxconfig|
+  
+    config.vm.define boxname do |box|
+      
+      box.vm.box = boxconfig[:box_name]
+
+      boxconfig[:net].each do |ipconf|
+        box.vm.network "private_network", ipconf
+      end
+
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 256
+      end
+
+    end
+  end
+    config.vm.provision "ansible" do |ansible|
+      ansible.verbose = "vvv"
+      ansible.inventory_path = "./hosts"
+      ansible.playbook = "playbook.yml"
+    end
+end

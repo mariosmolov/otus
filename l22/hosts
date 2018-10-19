@@ -1,0 +1,8 @@
+[common]
+testserver1 ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/testserver1/virtualbox/private_key
+testserver2 ansible_host=127.0.0.1 ansible_port=2200 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/testserver2/virtualbox/private_key
+testclient1 ansible_host=127.0.0.1 ansible_port=2201 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/testclient1/virtualbox/private_key
+testclient2 ansible_host=127.0.0.1 ansible_port=2202 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/testclient2/virtualbox/private_key
+inetrouter ansible_host=127.0.0.1 ansible_port=2203 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/inetrouter/virtualbox/private_key
+centralrouter ansible_host=127.0.0.1 ansible_port=2204 ansible_user=vagrant ansible_private_key_file=.vagrant/machines/centralrouter/virtualbox/private_key
+

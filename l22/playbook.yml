@@ -1,0 +1,55 @@
+---
+
+ - name: Common config
+   hosts: common
+   become: yes
+
+   tasks:
+   - name: Install epel
+     yum: 
+       name: epel-release
+       state: latest
+
+   - name: Install packages
+     yum: 
+       name:
+        - vim
+        - mc
+        - htop
+       state: latest
+
+ - name: Client1 configuration
+   hosts: testclient1
+   become: true
+   roles:
+      - client1
+
+ - name: Client2 configuration
+   hosts: testclient2
+   become: true
+   roles:
+      - client2
+
+ - name: Server1 configuration
+   hosts: testserver1
+   become: true
+   roles:
+      - server1
+
+ - name: Server2 configuration
+   hosts: testserver2
+   become: true
+   roles:
+      - server2
+
+ - name: Central router configuration
+   hosts: centralrouter
+   become: true
+   roles:
+      - centralrouter
+
+ - name: Inet router configuration
+   hosts: inetrouter
+   become: true
+   roles:
+      - inetrouter
