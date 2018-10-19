@@ -1,0 +1,16 @@
+---
+
+ - name: nic eth2 config
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth2 
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+
+ - name: nic eth2.100 config
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth2.100
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2.100
+
+ - name: Network reload 
+   service:
+      name: network
+      state: restarted
