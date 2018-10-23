@@ -1,0 +1,66 @@
+---
+
+ - name: Common config
+   hosts: common
+   become: yes
+
+   tasks:
+   - name: Install epel
+     yum: 
+       name: epel-release
+       state: latest
+
+   - name: Install packages
+     yum: 
+       name:
+        - vim
+        - mc
+        - htop
+        - libselinux-python
+        - libsemanage-python
+        - quagga
+       state: latest
+
+   - name: enableing forwarding
+     sysctl:
+       name: net.ipv4.ip_forward
+       value: 1
+       sysctl_set: yes
+
+   - name: disabling rp_filter
+     sysctl:
+       name: net.ipv4.conf.all.rp_filter
+       value: 2
+       sysctl_set: yes
+ 
+   - name: Open ospf port
+     firewalld:
+       port: 89/tcp
+       permanent: true
+       state: enabled
+
+   - name: configure selinux
+     seboolean:
+       name: allow_zebra_write_config
+       state: yes
+       persistent: yes
+
+
+ - name: Server1 configuration
+   hosts: server1
+   become: true
+   roles:
+      - server1
+
+ - name: Server2 configuration
+   hosts: server2
+   become: true
+   roles:
+      - server2
+
+ - name: Server3 configuration
+   hosts: server3
+   become: true
+   roles:
+      - server3
+

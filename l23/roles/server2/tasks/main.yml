@@ -1,0 +1,50 @@
+---
+
+ - name: nic eth1 config
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth1
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+
+ - name: nic eth2.10 config
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth1.12
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1.12
+
+ - name: nic eth2.20 config
+   template:
+      src: etc/sysconfig/network-scripts/ifcfg-eth1.20
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1.20
+
+ - name: Network reload
+   service:
+      name: network
+      state: restarted
+
+ - name: config zebra.conf
+   template:
+      src: etc/quagga/zebra.conf
+      dest: /etc/quagga/zebra.conf
+      owner: quagga
+      group: quagga
+
+
+ - name: config ospfd.conf
+   template:
+      src: etc/quagga/ospfd.conf
+      dest: /etc/quagga/ospfd.conf
+      owner: quagga
+      group: quagga
+
+
+ - name: zebra enable & start
+   service:
+      name: zebra
+      enabled: yes
+      state: started
+
+ - name: ospfd enable & start
+   service:
+      name: ospfd
+      enabled: yes
+      state: started
+

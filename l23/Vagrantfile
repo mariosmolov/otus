@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+MACHINES = {
+  :server1 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, virtualbox__intnet: "vlan-net"},
+                   {ip: '10.0.10.1', netmask: '255.255.255.0', adapter: 3, virtualbox__intnet: "other-net"},
+                ]
+  },
+  :server2 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, virtualbox__intnet: "vlan-net"},
+                   {ip: '10.0.20.1', netmask: '255.255.255.0', adapter: 3, virtualbox__intnet: "other-net"},
+                ]
+  },
+  :server3 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, virtualbox__intnet: "vlan-net"},
+                   {ip: '10.0.30.1', netmask: '255.255.255.0', adapter: 3, virtualbox__intnet: "other-net"},
+                ]
+  }
+}
+
+Vagrant.configure(2) do |config|
+  MACHINES.each do |boxname, boxconfig|
+  
+    config.vm.define boxname do |box|
+      box.vm.box = boxconfig[:box_name]
+      box.vm.host_name = boxname.to_s
+      boxconfig[:net].each do |ipconf|
+        box.vm.network "private_network", ipconf
+      end
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 256
+      end
+    end
+  end
+    config.vm.provision "ansible" do |ansible|
+      ansible.verbose = "vvv"
+      ansible.inventory_path = "./hosts"
+      ansible.playbook = "playbook.yml"
+    end
+end
