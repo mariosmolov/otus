@@ -1,0 +1,44 @@
+---
+
+ - name: Common config
+   hosts: common
+   become: yes
+
+   tasks:
+   - name: Install epel
+     yum: 
+       name: epel-release
+       state: present
+
+   - name: Install packages
+     yum: 
+       name:
+        - vim
+        - mc
+        - htop
+       state: present
+
+   - name: Install MySQL repo
+     yum:
+       name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+       state: present
+
+   - name: Install MySQL-Server
+     yum:
+       name: 
+        - mysql-community-server
+        - MySQL-python
+       state: present
+
+ - name: Master-server configuration
+   hosts: master
+   become: true
+   roles:
+      - master
+
+ - name: Slave-server configuration
+   hosts: slave
+   become: true
+   roles:
+      - slave
+

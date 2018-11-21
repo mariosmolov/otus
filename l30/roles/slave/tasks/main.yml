@@ -1,0 +1,42 @@
+---
+
+ - name: config my.cnf
+   template:
+      src: etc/my.cnf
+      dest: /etc/my.cnf
+      owner: root
+      group: root
+
+ - name: create mysql log folder
+   file:
+     path: /var/log/mysql
+     state: directory
+     owner: mysql
+     group: mysql
+     mode: 0775
+
+ - name: mysqld restart
+   service:
+      name: mysqld
+      enabled: yes
+      state: restarted
+
+ - name: Copy sql dump file
+   copy:
+      src: files/somedb.sql
+      dest: /home/vagrant/somedb.sql
+      owner: vagrant
+      group: vagrant
+
+ - name: Copy mysql script
+   copy:
+      src: files/mysql.sh
+      dest: /home/vagrant/mysql.sh
+      owner: vagrant
+      group: vagrant
+      mode: 0775
+
+ - name: Execute script
+   script: files/mysql.sh
+                                            
+
