@@ -1,0 +1,17 @@
+From - Wed Nov 21 10:41:04 2018
+X-Account-Key: account1
+X-UIDL: 000000015bdadaea
+X-Mozilla-Status: 0001
+X-Mozilla-Status2: 00000000
+X-Mozilla-Keys:                                                                                 
+Return-Path: <user2@example.local>
+Delivered-To: <user1@example.local>
+Received: from mx.example.local
+	by server (Dovecot) with LMTP id 02VXLRIa9Vs6DgAAot0D+g
+	for <user1@example.local>; Wed, 21 Nov 2018 08:40:50 +0000
+Received: from Pasha (unknown [192.168.50.1])
+	by mx.example.local (Postfix) with ESMTPA id 59ADC20059FA
+	for <user1@example.local>; Wed, 21 Nov 2018 08:40:20 +0000 (UTC)
+
+test test test
+

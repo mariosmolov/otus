@@ -1,0 +1,32 @@
+onnected to 192.168.50.10.
+Escape character is '^]'.
+220 mx.example.local ESMTP Postfix
+EHLO Pasha
+250-mx.example.local
+250-PIPELINING
+250-SIZE 10240000
+250-VRFY
+250-ETRN
+250-AUTH LOGIN PLAIN
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250 DSN
+AUTH LOGIN
+334 VXNlcm5hbWU6
+dXNlcjJAZXhhbXBsZS5sb2NhbA==
+334 UGFzc3dvcmQ6
+cGFzc3dkMg==
+235 2.7.0 Authentication successful
+MAIL FROM: user2@example.local     
+250 2.1.0 Ok
+RCPT TO: user1@example.local
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+test test test 
+.
+250 2.0.0 Ok: queued as 59ADC20059FA
+QUIT
+221 2.0.0 Bye
+Connection closed by foreign host.
+
