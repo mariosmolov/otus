@@ -1,0 +1,51 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+MACHINES = {
+  :master => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.1.1', netmask: '255.255.255.0', adapter: 2, virtualbox__intnet: "nfs-net"},
+                ]
+  },
+  :slave => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.1.2', netmask: '255.255.255.0', adapter: 3, virtualbox__intnet: "nfs-net"},
+                ]
+  }
+}
+
+Vagrant.configure(2) do |config|
+  MACHINES.each do |boxname, boxconfig|
+  
+    config.vm.define boxname do |box|
+      box.vm.box = boxconfig[:box_name]
+      box.vm.host_name = boxname.to_s
+      boxconfig[:net].each do |ipconf|
+        box.vm.network "private_network", ipconf
+      end
+      config.vm.provider "virtualbox" do |v|
+        v.memory = 1024
+      end
+      box.vm.provision "shell", inline: <<-SHELL
+        yum -y install nfs-utils
+      SHELL
+      case boxname.to_s
+        when "master"
+          box.vm.provision "shell", run: "once", inline: <<-SHELL
+            mkdir -p /nfs/share && mkdir -p /nfs/upload
+            chmod -R 777 /nfs
+            echo "/nfs/share 192.168.1.2(ro)\n/nfs/upload/ 192.168.1.2(rw)" > /etc/exports
+            systemctl enable nfs && systemctl start nfs
+          SHELL
+        when "slave"
+          box.vm.provision "shell", run: "always", inline: <<-SHELL
+            mkdir -p /nfs/share && mkdir -p /nfs/upload
+            echo "192.168.1.1:/nfs/share /nfs/share nfs ro 0 0\n192.168.1.1:/nfs/upload /nfs/upload nfs rw 0 0" >> /etc/fstab
+            mount -a
+          SHELL
+      end  
+    end
+  end
+end
